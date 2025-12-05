@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title> My Todo App</title>
+<link rel="stylesheet" href="todo.css">
+</head>
+
+<body>
+<h1 id="main-heading">ToDo List </h1>
+<p class="subtitle">Organize your day,
+     accomplish your goals</p>
+<div class="stats">
+    <div class="stat-card">
+        <span class="stat-number" id="total-count">0</span>
+        <span class="stat-label">Total Tasks</span>
+    </div>
+    <div class="stat-card">
+        <span class="stat-number" id="completed-count">0</span>
+        <span class="stat-label">Completed</span>
+    </div>
+    <div class="stat-card">
+        <span class="stat-number" id="pending-count">0</span>
+        <span class="stat-label">Pending</span>
+    </div>
+</div>
+<div class="grid-container">
+<input id="todo-input" type="text"
+placeholder="Enter Todo here">
+<input  id="date-input"type="date">
+<select id="priority-select">
+        <option value="low">Low</option>
+        <option value="medium" selected>Medium</option>
+        <option value="high">High</option>
+    </select>
+<button class='btn-todo' onclick="addTodo();">Add</button>
+</div>
+<!-- ADD FILTER BUTTONS: -->
+<div class="filters">
+    <button class="filter-btn active" onclick="filterTodos('all')">All</button>
+    <button class="filter-btn" onclick="filterTodos('active')">Active</button>
+    <button class="filter-btn" onclick="filterTodos('completed')">Completed</button>
+</div>
+<div class="todo-container grid-container"></div>
+
+
+<script src="todo.js"></script>
+</body>
+</html>
