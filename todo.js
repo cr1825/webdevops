@@ -5,11 +5,10 @@ displayItems();
 function addTodo() {
     let inputElement = document.querySelector('#todo-input');
     let dateElement = document.querySelector('#date-input');
-    let priorityElement = document.querySelector('#priority-select'); // ADD THIS
+    let priorityElement = document.querySelector('#priority-select');
 
-    let todoItem = inputElement.value.trim(); // ADD .trim()
+    let todoItem = inputElement.value.trim();
     
-    // ADD VALIDATION:
     if (!todoItem) {
         alert('Please enter a todo item!');
         return;
@@ -23,24 +22,37 @@ function addTodo() {
         tododate = `${parts[2]}/${parts[1]}/${parts[0]}`;
     }
 
-    // CHANGE push to include priority and id:
     todoList.push({
         id: Date.now(),
         item: todoItem,
         duedate: tododate,
-        priority: priorityElement.value
+        priority: priorityElement.value,
+        completed: false
     });
 
     inputElement.value = '';
     dateElement.value = '';
-    priorityElement.value = 'medium'; // ADD THIS
+    priorityElement.value = 'medium';
 
     displayItems();
 }
+
+function toggleComplete(id) {
+    const todo = todoList.find(t => t.id === id);
+    if (todo) {
+        todo.completed = !todo.completed;
+        displayItems();
+    }
+}
+
+function deleteTodo(id) {
+    todoList = todoList.filter(t => t.id !== id);
+    displayItems();
+}
+
 function filterTodos(filter) {
     currentFilter = filter;
     
-    // Update active button
     document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.classList.remove('active');
     });
@@ -59,11 +71,9 @@ function updateStats() {
     document.getElementById('pending-count').textContent = pending;
 }
 
-
 function displayItems() {
     let containerElement = document.querySelector('.todo-container');
     
-    // ADD FILTERING:
     let filteredList = todoList;
     if (currentFilter === 'active') {
         filteredList = todoList.filter(t => !t.completed);
@@ -76,17 +86,20 @@ function displayItems() {
     for(let i = 0; i < filteredList.length; i++) {
         let todo = filteredList[i];
         let priorityClass = `priority-${todo.priority}`;
+        let completedClass = todo.completed ? 'completed' : '';
         
-        // FIX: Add opening <div> tag:
         newHtml += `
-        <div class="todo-item">
+        <div class="todo-item ${completedClass}">
+            <input type="checkbox" class="checkbox" 
+                   ${todo.completed ? 'checked' : ''} 
+                   onchange="toggleComplete(${todo.id})" />
             <span>${todo.item}</span>
-            <span>${todo.duedate}</span>
+            <span>${todo.duedate || 'No date'}</span>
             <span class="priority-badge ${priorityClass}">${todo.priority.toUpperCase()}</span>
-            <button class='btn-delete' onclick="todoList.splice(${i},1); displayItems();">Delete</button>
+            <button class='btn-delete' onclick="deleteTodo(${todo.id})">Delete</button>
         </div>`;
     }
     
     containerElement.innerHTML = newHtml;
-    updateStats(); // ADD THIS
+    updateStats();
 }
